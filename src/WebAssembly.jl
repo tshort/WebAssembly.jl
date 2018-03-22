@@ -3,6 +3,7 @@ module WebAssembly
 include("wasm.jl")
 include("passes.jl")
 include("looper.jl")
+include("interpret.jl")
 
 module Instructions
 
