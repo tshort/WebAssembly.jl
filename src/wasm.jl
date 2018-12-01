@@ -204,6 +204,16 @@ Base.show(io::IO, i::Branch)   = print(io, i.cond ? "br_if " : "br ", i.level)
 Base.show(io::IO, i::Return)   = print(io, "return")
 Base.show(io::IO, i::Unreachable) = print(io, "unreachable")
 Base.show(io::IO, i::Drop)     = print(io, "drop")
+Base.show(io::IO, i::GetGlobal) = print(io, "get_global $(i.id)")
+Base.show(io::IO, i::SetGlobal) = print(io, "set_global $(i.id)")
+Base.show(io::IO, i::MemoryUtility) = print(io, "$(i.name)")
+
+function Base.show(io::IO, i::MemoryOp)
+  jtyp = jltype(i.typ)
+  typext = i.name == :store || jtyp == i.store_type ? "" : i.store_type <: Signed ? "_s" : "_u"
+  len = jtyp == i.store_type ? "" : 8 * sizeof(i.store_type)
+  print(io, "$(i.typ).$(i.name)$(len)$(typext) ($(i.typ).const $(i.offset)) ($(i.typ).const $(i.alignment))")
+end
 
 printwasm(io, x, level) = show(io, x)
 
